@@ -18,14 +18,19 @@ package cn.nekocode.camFilter;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +39,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -64,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private TextureView textureView;
     private int filterId = R.id.filter0;
     private int mCurrentFilterId = 0;
+    Typeface typeface_iranSans;
+    TextView textViewFilterName;
 
     String[] TITLES = {"Original", "EdgeDectection", "Pixelize",
             "EMInterference", "TrianglesMosaic", "Legofied",
@@ -111,6 +119,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     boolean isRecording=false;
     MediaRecorder mMediaRecorder;
 
+    Toolbar toolbar;
+    DrawerLayout drawerLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,8 +129,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         setContentView(R.layout.activity_main);
         init();
 
+        setuptoolbarMainActivity();
 
-        setTitle(TITLES[mCurrentFilterId]);
+//        setTitle(TITLES[mCurrentFilterId]);
+        setTitle("CamFilter");
+        textViewFilterName.setText(TITLES[mCurrentFilterId]);
 
         getCameraPermission();
 
@@ -188,11 +202,100 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         container = findViewById(R.id.frameLayoutRootElementMainActivity);
         imageView_takePhoto = findViewById(R.id.imageView5);
         imageView_ChangeFacing = findViewById(R.id.imageView_changeFacing);
+        toolbar=findViewById(R.id.toolbarMainActivity);
+        drawerLayout=findViewById(R.id.drawerLayoutMainActivity);
 //        imageView5=findViewById(R.id.imageView5);
+        typeface_iranSans = Typeface.createFromAsset(getAssets(), "fonts/iran_sans.ttf");
+        textViewFilterName=findViewById(R.id.textViewFilterName);
+    }
+
+    private void setuptoolbarMainActivity() {
+
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+
+
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
+            if (toolbar.getChildAt(i) instanceof TextView) {
+                ((TextView) toolbar.getChildAt(i)).setTypeface(typeface_iranSans);
+                ((TextView) toolbar.getChildAt(i)).setTextSize(18);
+            }
+
+        }
+
+//        relativeLayoutHome = navigationView.findViewById(R.id.relativeLayoutBasicPage);
+//        relativeLayoutEnter = navigationView.findViewById(R.id.relativeLayoutEnter);
+//        relativeLayoutSubjects = navigationView.findViewById(R.id.relativeLayoutSubjects);
+//        relativeLayoutMarked = navigationView.findViewById(R.id.relativeLayoutMarked);
+//        relativeLayoutAboutUs = navigationView.findViewById(R.id.relativeLayoutAboutUs);
+//        relativeLayoutContactUs = navigationView.findViewById(R.id.relativeLayoutContactUs);
+//
+//        relativeLayoutHome.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                drawerLayout.isDrawerOpen(GravityCompat.START);
+//                drawerLayout.closeDrawer(GravityCompat.START);
+//            }
+//        });
+//
+//        relativeLayoutEnter.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//            }
+//        });
+//
+//        relativeLayoutSubjects.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Toast.makeText(ActivityMain.this, "موضوعات", Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
+//
+//        relativeLayoutMarked.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent intent = new Intent(ActivityMain.this, ActivityMarker.class);
+//                startActivity(intent);
+//
+//            }
+//        });
+//
+//        relativeLayoutAboutUs.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//            }
+//        });
+//
+//        relativeLayoutContactUs.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent intentContactUs = new Intent(ActivityMain.this, ActivityContactUs.class);
+//                startActivity(intentContactUs);
+//
+//            }
+//        });
+
+
+
     }
 
     public void requestCameraPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.RECORD_AUDIO},
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 REQUEST_CAMERA_PERMISSION);
     }
 
@@ -222,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.filter, menu);
+//        getMenuInflater().inflate(R.menu.filter, menu);
         return true;
     }
 
@@ -230,20 +333,20 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public boolean onOptionsItemSelected(MenuItem item) {
         filterId = item.getItemId();
 
-        // TODO: need tidy up
-        if (filterId == R.id.capture) {
-            Toast.makeText(this,
-                    capture() ? "The capture has been saved to your sdcard root path." :
-                            "Save failed!",
-                    Toast.LENGTH_SHORT).show();
-            return true;
-        }
+//        // TODO: need tidy up
+//        if (filterId == R.id.capture) {
+//            Toast.makeText(this,
+//                    capture() ? "The capture has been saved to your sdcard root path." :
+//                            "Save failed!",
+//                    Toast.LENGTH_SHORT).show();
+//            return true;
+//        }
 
-        setTitle(item.getTitle());
-
-        if (renderer != null)
-            renderer.setSelectedFilter(filterId);
-        mCurrentFilterId = mFilterArray.indexOf(filterId);
+//        setTitle(item.getTitle());
+//
+//        if (renderer != null)
+//            renderer.setSelectedFilter(filterId);
+//        mCurrentFilterId = mFilterArray.indexOf(filterId);
         return true;
     }
 
@@ -404,7 +507,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         float velocity = Math.abs(velocityX) > Math.abs(velocityY) ? velocityX : velocityY;
         int step = velocity > 0 ? -1 : 1;
         mCurrentFilterId = circleLoop(TITLES.length, mCurrentFilterId, step);
-        setTitle(TITLES[mCurrentFilterId]);
+        textViewFilterName.setText(TITLES[mCurrentFilterId]);
+//        setTitle(TITLES[mCurrentFilterId]);
         if (renderer != null) {
             renderer.setSelectedFilter(FILTER_RES_IDS[mCurrentFilterId]);
         }

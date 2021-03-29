@@ -106,7 +106,7 @@ public class CameraRenderer implements Runnable, TextureView.SurfaceTextureListe
     private SurfaceTexture cameraSurfaceTexture;
     private int cameraTextureId;
     private CameraFilter selectedFilter;
-    private int selectedFilterId = R.id.filter2;
+    private int selectedFilterId = R.id.filter0;
     private SparseArray<CameraFilter> cameraFilterMap = new SparseArray<>();
 
 
