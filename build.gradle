@@ -1,17 +1,33 @@
 buildscript {
     repositories {
-        jcenter()
         google()
+        jcenter()
+//        mavenCentral()
+//        maven { url "https://maven.google.com" }
+//        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0'
+        classpath 'com.android.tools.build:gradle:4.0.1'
     }
 }
 
 allprojects {
     repositories {
-        jcenter()
+//        mavenCentral()
+//        maven {
+//            url "https://maven.google.com"
+//        }
+//
+        maven { url 'https://maven.aliyun.com/repository/google' }
+//        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+//        maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+
+
         google()
+        jcenter()
+//        maven { url 'https://maven.google.com' }
+//        maven { url "https://jitpack.io" }
+//        maven { url 'http://guardian.github.com/maven/repo-releases' }
     }
 }
 

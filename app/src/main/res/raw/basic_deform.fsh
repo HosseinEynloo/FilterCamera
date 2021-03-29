@@ -7,9 +7,9 @@ varying vec2                texCoord;
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {	
-	float stongth = 0.3;
+	float stongth = 0.9;
 	vec2 uv = fragCoord.xy;
-	float waveu = sin((uv.y + iGlobalTime) * 20.0) * 0.5 * 0.05 * stongth;
+	float waveu = sin((uv.y + iGlobalTime) * 20.0) * 0.6 * 0.10 * stongth;
 	fragColor = texture2D(iChannel0, uv + vec2(waveu, 0));
 }
 
