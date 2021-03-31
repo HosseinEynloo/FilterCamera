@@ -41,6 +41,8 @@ public abstract class CameraFilter {
             -1.0f, 1.0f,
     };
 
+
+
     public static float TEXTURE_COORDS[] = {
             1.0f, 0.0f,
             0.0f, 0.0f,
@@ -67,6 +69,7 @@ public abstract class CameraFilter {
             0.0f, 0.0f,
             0.0f, 1.0f,
     };
+
 
     private static final float ROATED_TEXTURE_COORDS_Front[] = {
             0.0f, 0.0f,
@@ -97,10 +100,8 @@ public abstract class CameraFilter {
         }
 
         if (TEXTURE_COORD_BUF_FRONT == null) {
-            TEXTURE_COORD_BUF_FRONT = ByteBuffer.allocateDirect(TEXTURE_COORDS_front.length * 4)
-                    .order(ByteOrder.nativeOrder()).asFloatBuffer();
+            TEXTURE_COORD_BUF_FRONT = ByteBuffer.allocateDirect(TEXTURE_COORDS_front.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
             TEXTURE_COORD_BUF_FRONT.put(TEXTURE_COORDS_front);
-
             TEXTURE_COORD_BUF_FRONT.position(0);
         }
 
@@ -185,9 +186,17 @@ public abstract class CameraFilter {
 
 
         if (MainActivity.backFace) {
-            setupShaderInputs(program, VERTEX_BUF, TEXTURE_COORD_BUF, iResolution, iChannels, iChannelResolutions);
+            if (MainActivity.isRotate){
+                setupShaderInputs(program, VERTEX_BUF, TEXTURE_COORD_BUF_FRONT, iResolution, iChannels, iChannelResolutions);
+            }else {
+                setupShaderInputs(program, VERTEX_BUF, TEXTURE_COORD_BUF, iResolution, iChannels, iChannelResolutions);
+            }
         } else {
-            setupShaderInputs(program, VERTEX_BUF, TEXTURE_COORD_BUF_FRONT, iResolution, iChannels, iChannelResolutions);
+            if (MainActivity.isRotate){
+                setupShaderInputs(program, VERTEX_BUF, TEXTURE_COORD_BUF, iResolution, iChannels, iChannelResolutions);
+            }else {
+                setupShaderInputs(program, VERTEX_BUF, TEXTURE_COORD_BUF_FRONT, iResolution, iChannels, iChannelResolutions);
+            }
         }
 
     }

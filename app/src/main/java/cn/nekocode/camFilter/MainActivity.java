@@ -39,8 +39,11 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -73,6 +76,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     Typeface typeface_iranSans;
     TextView textViewFilterName;
 
+    ImageView imageViewRotation;
+    ImageView imageViewMenuNavigation;
+    ImageView imageViewFilter;
+    NavigationView navigationView;
+
     String[] TITLES = {"Original", "EdgeDectection", "Pixelize",
             "EMInterference", "TrianglesMosaic", "Legofied",
             "TileMosaic", "Blueorange", "ChromaticAberration",
@@ -97,16 +105,16 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     GestureDetector mGestureDetector;
 
     public static boolean backFace = true;
+    public static boolean isRotate = false;
 
-    static  float TEXTURE_COORDS[] = {
+    static float TEXTURE_COORDS[] = {
             1.0f, 0.0f,
             0.0f, 0.0f,
             1.0f, 1.0f,
             0.0f, 1.0f,
     };
 
-
-    static  float TEXTURE_COORDS_front[] = {
+    static float TEXTURE_COORDS_front[] = {
             1.0f, 1.0f,
             0.0f, 1.0f,
             1.0f, 0.0f,
@@ -114,12 +122,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     };
 
     CameraFilter cameraFilter;
-
-
-    boolean isRecording=false;
+    boolean isRecording = false;
     MediaRecorder mMediaRecorder;
 
-    Toolbar toolbar;
+    RelativeLayout toolbar;
     DrawerLayout drawerLayout;
 
 
@@ -139,11 +145,51 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         mGestureDetector = new GestureDetector(this, this);
 
+
+        clickListener();
+
+
+
+    }
+
+    private void clickListener() {
+
         imageView_takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 capture();
                 Toast.makeText(MainActivity.this, "save", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        imageViewRotation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+               if (isRotate){
+                   isRotate=false;
+               }else {
+                   isRotate=true;
+               }
+
+            }
+        });
+
+        imageViewMenuNavigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                drawerLayout.openDrawer(navigationView);
+            }
+        });
+
+
+        imageViewFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
             }
         });
 
@@ -161,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     CameraFilter.release();
 
-                    CameraFilter.TEXTURE_COORDS=TEXTURE_COORDS;
+                    CameraFilter.TEXTURE_COORDS = TEXTURE_COORDS;
                     setupCameraPreviewView();
 
 
@@ -176,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     CameraFilter.release();
 
-                    CameraFilter.TEXTURE_COORDS=TEXTURE_COORDS_front;
+                    CameraFilter.TEXTURE_COORDS = TEXTURE_COORDS_front;
                     setupCameraPreviewView();
 
 
@@ -194,41 +240,45 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 //
 //            }
 //        });
-
     }
-
 
     private void init() {
         container = findViewById(R.id.frameLayoutRootElementMainActivity);
         imageView_takePhoto = findViewById(R.id.imageView5);
         imageView_ChangeFacing = findViewById(R.id.imageView_changeFacing);
-        toolbar=findViewById(R.id.toolbarMainActivity);
-        drawerLayout=findViewById(R.id.drawerLayoutMainActivity);
+//        toolbar = findViewById(R.id.toolbarMainActivity);
+        drawerLayout = findViewById(R.id.drawerLayoutMainActivity);
 //        imageView5=findViewById(R.id.imageView5);
         typeface_iranSans = Typeface.createFromAsset(getAssets(), "fonts/iran_sans.ttf");
-        textViewFilterName=findViewById(R.id.textViewFilterName);
+        textViewFilterName = findViewById(R.id.textViewFilterName);
+        imageViewRotation=findViewById(R.id.imageViewRotation);
+        imageViewMenuNavigation=findViewById(R.id.imageViewMenuNavigation);
+        imageViewFilter=findViewById(R.id.imageViewFilter);
+        navigationView=findViewById(R.id.navigationViewMainActivity);
+
+
     }
 
     private void setuptoolbarMainActivity() {
 
-        setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+//        setSupportActionBar(toolbar);
+//        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
 
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setHomeButtonEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
-        drawerLayout.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
+//        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
+//        drawerLayout.addDrawerListener(drawerToggle);
+//        drawerToggle.syncState();
 
 
-        for (int i = 0; i < toolbar.getChildCount(); i++) {
-            if (toolbar.getChildAt(i) instanceof TextView) {
-                ((TextView) toolbar.getChildAt(i)).setTypeface(typeface_iranSans);
-                ((TextView) toolbar.getChildAt(i)).setTextSize(18);
-            }
-
-        }
+//        for (int i = 0; i < toolbar.getChildCount(); i++) {
+//            if (toolbar.getChildAt(i) instanceof TextView) {
+//                ((TextView) toolbar.getChildAt(i)).setTypeface(typeface_iranSans);
+//                ((TextView) toolbar.getChildAt(i)).setTextSize(18);
+//            }
+//
+//        }
 
 //        relativeLayoutHome = navigationView.findViewById(R.id.relativeLayoutBasicPage);
 //        relativeLayoutEnter = navigationView.findViewById(R.id.relativeLayoutEnter);
@@ -289,7 +339,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 //
 //            }
 //        });
-
 
 
     }
@@ -467,7 +516,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
 
-
     private String genSaveFileName(String prefix, String suffix) {
         Date date = new Date();
         SimpleDateFormat dateformat1 = new SimpleDateFormat("yyyyMMdd_hhmmss");
@@ -552,7 +600,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 }
 
             } else {
-                 setupCameraPreviewView();
+                setupCameraPreviewView();
             }
         } else {
             setupCameraPreviewView();
